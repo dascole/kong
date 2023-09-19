@@ -24,9 +24,18 @@ local function execute(args)
   end
 
   if args.command == "redis" then
-                    -- connect(host,    port,    password,opts)
-    return redis_utils.connect(args[1], args[2], args[3], arg[4], arg[5])
+    local host, port, password, opts 
+    if #args == 0 then 
+      host, port, password, opts = redis_utils.get_params()
+    else
+      host = args[1]
+      port = args[2]
+      password = args[3]
+      opts = { ssl = args[4], ssl_verify = args[5] }
+    end
+    return redis_utils.connect(host, port, password, opts)   
   end
+
   error("unknown command '" .. args.command .. "'")
 end
 
@@ -37,7 +46,7 @@ Troubleshoot basic aspects of operating Kong.
 
 The available commands are:
   tcp <host> <port>                                      Connect to a tcp socket of your choosing.
-  redis --host <host> <port> <password> <ssl> <verify>   Connect to a redis instance of your choosing.
+  redis <host> <port> <password> <ssl> <verify>   Connect to a redis instance of your choosing.
 ]]
 
 return {

@@ -5,13 +5,12 @@ local function get_params()
   local host, port, ssl, ssl_verify, password
   local opts = {}
 
-  if #args < 2 then
     print("Running in interactive mode. \nIf you wish to specify at the CLI please use the following positional arguments\nUsage: redis.lua <host> <port> <password> <ssl> <verify>\n")
     io.write("Enter the Redis host: ")
     host = io.read()
     io.write("Enter the Redis port: ")
     port = tonumber(io.read())
-    io.write("Enter the Redis password (If AUTH is not used, leave this blank): ")
+    io.write("Enter the Redis password (If AUTH is not used, leave this blank): \n")
     os.execute("stty -echo")
     password = io.read()
     os.execute("stty echo")
@@ -29,23 +28,6 @@ local function get_params()
     else
       opts.ssl = false
     end
-  else
-    host = args[2]
-    port = tonumber(args[3])
-    password = args[4]
-    ssl = args[5]
-    if ssl == "ssl" then
-      opts.ssl = true
-      ssl_verify = args[6]
-      if ssl_verify == "verify" then
-        opts.ssl_verify = true
-      else
-        opts.ssl_verify = false
-      end
-    else
-      opts.ssl = false
-    end
-  end
 return host, port, password, opts
 end
 
@@ -86,7 +68,7 @@ local function connect(host, port, password, opts)
     print("❌ Failed to get Kong: " .. err)
     os.exit(1)
   end
-  print("Retrived value from key: Kong\n\tValue: " .. ok)
+  print("Retrived value from\n\tkey: Kong\n\tValue: " .. ok)
   
 end
 
@@ -94,6 +76,3 @@ return {
     connect = connect,
     get_params = get_params,
   }
--- local host, port, password, opts = get_params()
--- connect(host, port, password, opts)
-
